@@ -1,15 +1,18 @@
 Results for Concept Drift:
+  log_name: Concept Drift
   Variants: 85
-  Edit Distance: 7.110644257703081
-  Custom Variability: 3.963351863446103
+  Edit Distance Variability: 16.61237015449665
+  Custom Variability (Entropy): 3.963351863446103
 
 Results for Concept Drift Type 1:
+  log_name: Concept Drift Type 1
   Variants: 45
-  Edit Distance: 7.256565656565656
-  Custom Variability: 3.957950086018128
+  Edit Distance Variability: 17.19618201452001
+  Custom Variability (Entropy): 3.957950086018128
 
 Results for Concept Drift Type 2:
+  log_name: Concept Drift Type 2
   Variants: 40
-  Edit Distance: 6.5346153846153845
-  Custom Variability: 3.8662000528550595
+  Edit Distance Variability: 16.561111056039945
+  Custom Variability (Entropy): 3.8662000528550595
 
