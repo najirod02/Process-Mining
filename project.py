@@ -1,29 +1,39 @@
+#pm4py library
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.algo.filtering.log.variants import variants_filter
+
+#modules to compute pairs
 from collections import Counter
 from itertools import combinations
-import math
+
+#show progress bar
 from tqdm import tqdm
+
+#modules to compute variabilities
 from functools import lru_cache
-
 from rapidfuzz.distance import Levenshtein
+import math
 
+
+# ----------- user defined functions ----------- 
+
+'''
+Compute the edit distance by using the levenshtein distance
+and a small cache optimization to speed up a little the
+computation
+'''
 @lru_cache(maxsize=None)
 def levenshtein_word_level_cached(trace1, trace2):
-    return levenshtein_word_level(trace1, trace2)
-
-
-def levenshtein_word_level(trace1, trace2):
-    """
-    Optimized Levenshtein distance at the word level using reduced space.
-    """
-
     words1 = trace1.split(" ")
     words2 = trace2.split(" ")
-
     return Levenshtein.distance(words1, words2)
 
 
+'''
+A wrap function that prepares the input data for the edit distance
+function and that also keeps in consideration the number of
+frequencies of each trace
+'''
 def compute_edit_distance(variant_pair, frequencies):
     var1, var2 = variant_pair
     distance = levenshtein_word_level_cached(str(var1), str(var2))
@@ -32,6 +42,48 @@ def compute_edit_distance(variant_pair, frequencies):
     return distance * weight, weight
 
 
+'''
+Given the log file and name, process the three functions 
+and return the results as a dictionary
+'''
+def process_log(log_name, log_path):
+    print(f"\nProcessing log: {log_name}...")
+    event_log = xes_importer.apply(log_path)
+    results = {
+        "log_name": log_name,
+        "Variants": compute_variant_variability(event_log),
+        "Edit Distance Variability": compute_edit_distance_variability(event_log),
+        "Custom Variability (Entropy)": compute_my_variability(event_log)
+    }
+    return results
+
+
+'''
+Given a dictionary of results, defined as in process_log, write
+them in the given filename
+'''
+def write_results_to_file(results, filename="output_results.txt"):
+    with open(filename, "w") as file:
+        for log, metrics in results.items():
+            file.write(f"Results for {log}:\n")
+            for metric, value in metrics.items():
+                file.write(f"  {metric}: {value}\n")
+            file.write("\n")
+
+# ----------- user defined functions ----------- 
+
+
+# ----------- requested functions for the project ----------- 
+'''
+Returning the number of variants of the event log
+'''
+def compute_variant_variability(event_log):
+    return len(variants_filter.get_variants(event_log))
+
+
+'''
+Returning the average edit distance between pairs of traces
+'''
 def compute_edit_distance_variability(event_log):
     #extract unique variants and their frequencies
     variants_info = variants_filter.get_variants(event_log)
@@ -52,11 +104,12 @@ def compute_edit_distance_variability(event_log):
 
     return total_weighted_distance / total_pairs if total_pairs > 0 else 0
 
-
-def compute_variant_variability(event_log):
-    return len(variants_filter.get_variants(event_log))
-
-
+'''
+Returning a measure of the variability of the log that you can define
+by yourself. 
+You can take into account the only control flow or also look at the variability of
+the event payloads.
+'''
 def compute_my_variability(event_log):
     activity_counter = Counter()
     for trace in event_log:
@@ -65,29 +118,11 @@ def compute_my_variability(event_log):
     total = sum(activity_counter.values())
     return -sum((count / total) * math.log2(count / total) for count in activity_counter.values())
 
-
-def process_log(log_name, log_path):
-    print(f"\nProcessing log: {log_name}...")
-    event_log = xes_importer.apply(log_path)
-    results = {
-        "log_name": log_name,
-        "Variants": compute_variant_variability(event_log),
-        "Edit Distance Variability": compute_edit_distance_variability(event_log),
-        "Custom Variability (Entropy)": compute_my_variability(event_log)
-    }
-    return results
-
-
-def write_results_to_file(results, filename="output_results.txt"):
-    with open(filename, "w") as file:
-        for log, metrics in results.items():
-            file.write(f"Results for {log}:\n")
-            for metric, value in metrics.items():
-                file.write(f"  {metric}: {value}\n")
-            file.write("\n")
+# ----------- requested functions for the project ----------- 
 
 
 def main():
+    #the logs to analyze (name, path)
     logs = {
         "Concept Drift": "concept_drift.xes",
         "Concept Drift Type 1": "concept_drift_type1.xes",
