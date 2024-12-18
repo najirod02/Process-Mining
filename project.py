@@ -48,7 +48,8 @@ def compute_edit_distance(variant_pair, frequencies):
 def compute_edit_distance_variability(event_log):
     #extract unique variants and their frequencies
     variants_info = variants_filter.get_variants(event_log)
-    variants = list(variants_info.keys())#unique variants
+    #variants = list(variants_info.keys())#unique variants
+    variants = sorted(variants_info.keys(), key=lambda x: len(" ".join(x).split(" ")))#little speed up for big logs
     frequencies = {variant: len(traces) for variant, traces in variants_info.items()}
 
     all_pairs = list(combinations(variants, 2))
