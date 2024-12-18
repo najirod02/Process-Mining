@@ -16,3 +16,9 @@ Results for Concept Drift Type 2:
   Edit Distance Variability: 16.561111056039945
   Custom Variability (Entropy): 3.8662000528550595
 
+Results for BPIChallenge2011:
+  log_name: BPIChallenge2011
+  Variants: 981
+  Edit Distance Variability: 670.0594417082218
+  Custom Variability (Entropy): 5.917720750628085
+

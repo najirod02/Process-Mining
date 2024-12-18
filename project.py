@@ -4,42 +4,29 @@ from collections import Counter
 from itertools import combinations
 import math
 from tqdm import tqdm
+from functools import lru_cache
+
+from rapidfuzz.distance import Levenshtein
+
+@lru_cache(maxsize=None)
+def levenshtein_word_level_cached(trace1, trace2):
+    return levenshtein_word_level(trace1, trace2)
+
 
 def levenshtein_word_level(trace1, trace2):
     """
-    Compute Levenshtein distance at the word level between two traces.
-
-    Parameters:
-        trace1 (str): First trace string.
-        trace2 (str): Second trace string.
-
-    Returns:
-        int: Word-level Levenshtein distance between trace1 and trace2.
+    Optimized Levenshtein distance at the word level using reduced space.
     """
+
     words1 = trace1.split(" ")
     words2 = trace2.split(" ")
-    
-    dp = [[0] * (len(words2) + 1) for _ in range(len(words1) + 1)]
-    
-    for i in range(len(words1) + 1):
-        for j in range(len(words2) + 1):
-            if i == 0:
-                dp[i][j] = j
-            elif j == 0:
-                dp[i][j] = i
-            elif words1[i - 1] == words2[j - 1]:
-                dp[i][j] = dp[i - 1][j - 1]
-            else:
-                dp[i][j] = 1 + min(dp[i - 1][j],
-                                   dp[i][j - 1],
-                                   dp[i - 1][j - 1])
 
-    return dp[len(words1)][len(words2)]
+    return Levenshtein.distance(words1, words2)
 
 
 def compute_edit_distance(variant_pair, frequencies):
     var1, var2 = variant_pair
-    distance = levenshtein_word_level(str(var1), str(var2))
+    distance = levenshtein_word_level_cached(str(var1), str(var2))
     #consider frequencies of variants
     weight = frequencies[var1] * frequencies[var2]
     return distance * weight, weight
@@ -105,7 +92,7 @@ def main():
         "Concept Drift": "concept_drift.xes",
         "Concept Drift Type 1": "concept_drift_type1.xes",
         "Concept Drift Type 2": "concept_drift_type2.xes",
-        #"BPIChallenge2011": "BPIChallenge2011.xes"
+        "BPIChallenge2011": "BPIChallenge2011.xes"
     }
 
     results = {}

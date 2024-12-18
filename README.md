@@ -15,5 +15,6 @@ One way to try to speed up computation is to not compute the same pairs (the ord
 ### Note
 
 - intallare tqdm
+- forse uso di rapidfuzz
 - bpichallenge, seppur usando la edit distance word based, richiede troppo tempo
 bisogna valutare (decide il prof) se ridurre la grandezza di questo log
