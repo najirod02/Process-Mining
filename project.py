@@ -6,17 +6,15 @@ from pm4py.algo.filtering.log.variants import variants_filter
 from collections import Counter
 from itertools import combinations
 
-#show progress bar
-from tqdm import tqdm
-
 #modules to compute variabilities
 from functools import lru_cache
 from rapidfuzz.distance import Levenshtein
 import math
 
+from tqdm import tqdm
+import os
 
 # ----------- user defined functions ----------- 
-
 '''
 Compute the edit distance by using the levenshtein distance
 and a small cache optimization to speed up a little the
@@ -77,7 +75,6 @@ def write_results_to_file(results, filename="output_results.txt"):
             for metric, value in metrics.items():
                 file.write(f"  {metric}: {value}\n")
             file.write("\n")
-
 # ----------- user defined functions ----------- 
 
 
@@ -112,6 +109,7 @@ def compute_edit_distance_variability(event_log):
 
     return total_weighted_distance / total_pairs if total_pairs > 0 else 0
 
+
 '''
 Returning a measure of the variability of the log that you can define
 by yourself. 
@@ -125,7 +123,6 @@ def compute_my_variability(event_log):
             activity_counter[event['concept:name']] += 1
     total = sum(activity_counter.values())
     return -sum((count / total) * math.log2(count / total) for count in activity_counter.values())
-
 # ----------- requested functions for the project ----------- 
 
 
