@@ -36,7 +36,23 @@ We have to use the function mentioned before on 4 log files:
 
 This repository contains both the log files and the script `project.py`. The script performs an analysis of the event logs.
 
-Before running the script, ensure you have installed the required dependencies:
+With the latest version of python (Python 3.3 or higher), you need to `create a virutal environment` before installing the dependencises.<br/>
+If you have a lower version then you can skip this part about venv and directly go to the [list of modules](#modules-list).
+
+This command will create a folder for the virutal environment.
+
+```bash
+python3 -m venv path_to_repo/venv
+```
+
+To `activate the new environment` simply type:
+
+```bash
+ source venv/bin/activate
+```
+
+### Modules list
+With the environment activated (if needed), you can install the required dependencies:
 ```bash
 pip install pm4py
 pip install rapidfuzz
@@ -46,12 +62,21 @@ pip install tqdm
 [`rapidFuzz`](https://pypi.org/project/RapidFuzz/) is a fast string matching library for Python and C++ while [`tqdm`](https://pypi.org/project/tqdm/) is a simple library for displaying progress bars, useful for monitoring long computations, especially for large log files.
 Last but not least, [`pm4py`](https://pypi.org/project/pm4py/) is a python library that supports process mining algorithms in python.
 
+If you want to deactivate the venv:
+```bash
+deactivate
+```
+I suggest to leave it activated as long as you are working on the project and/or testing as this allows the correct functioning of the 
+script.
+
 ## Run the code
 To execute the analysis, simply run the following command in your terminal:
 
 ```bash
 python3 project.py
 ```
+
+Make sure that the `venv is activated`.
 
 The results will be both printed on the terminal and in an output file called `output_results.txt`
 

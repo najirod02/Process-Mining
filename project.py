@@ -159,6 +159,5 @@ def main():
     #write results on file
     write_results_to_file(results)
 
-
 if __name__ == "__main__":
     main()
