@@ -53,6 +53,8 @@ To execute the analysis, simply run the following command in your terminal:
 python3 project.py
 ```
 
+The results will be both printed on the terminal and in an output file called `output_results.txt`
+
 The log files to be read are already defined inside the code in the main function. In case you want to add/remove a file to analyse or to simply change the path of one of them you can modify the list following the structure:
 ```python
 logs = {

@@ -49,6 +49,7 @@ def process_log(log_name, log_path):
     event_log = xes_importer.apply(log_path)
     results = {
         "log_name": log_name,
+        "Unique activities": compute_unique_activities(event_log),
         "Variants": compute_variant_variability(event_log),
         "Edit Distance Variability": compute_edit_distance_variability(event_log),
         "Custom Variability (Entropy)": compute_my_variability(event_log)
@@ -75,6 +76,17 @@ def write_results_to_file(results, filename="output_results.txt"):
             for metric, value in metrics.items():
                 file.write(f"  {metric}: {value}\n")
             file.write("\n")
+
+
+'''
+Returning the number of unique activities in the event log
+'''
+def compute_unique_activities(event_log):
+    activity_counter = set()
+    for trace in event_log:
+        for event in trace:
+            activity_counter.add(event['concept:name'])
+    return len(activity_counter)
 # ----------- user defined functions ----------- 
 
 
@@ -92,14 +104,13 @@ Returning the average edit distance between pairs of traces
 def compute_edit_distance_variability(event_log):
     #extract unique variants and their frequencies
     variants_info = variants_filter.get_variants(event_log)
-    #variants = list(variants_info.keys())#unique variants
-    variants = sorted(variants_info.keys(), key=lambda x: len(" ".join(x).split(" ")))#little speed up for big logs
+    #little speed up for big logs
+    variants = sorted(variants_info.keys(), key=lambda x: len(" ".join(x).split(" ")))
     frequencies = {variant: len(traces) for variant, traces in variants_info.items()}
 
     all_pairs = list(combinations(variants, 2))
     total_weighted_distance = 0
     total_pairs = 0
-    #print(f"Total unique variant pairs: {len(all_pairs)}")
 
     #using tqdm to display progress bar
     for pair in tqdm(all_pairs, desc="Computing Edit Distance", unit="pair"):
@@ -111,10 +122,8 @@ def compute_edit_distance_variability(event_log):
 
 
 '''
-Returning a measure of the variability of the log that you can define
-by yourself. 
-You can take into account the only control flow or also look at the variability of
-the event payloads.
+Entropy computation based solely on the control flow of the traces.
+The entropy tells you how much omogeneous are distributed the activities.
 '''
 def compute_my_variability(event_log):
     activity_counter = Counter()
@@ -129,10 +138,10 @@ def compute_my_variability(event_log):
 def main():
     #the logs to analyze (name, path)
     logs = {
-        "Concept Drift": "concept_drift.xes",
-        "Concept Drift Type 1": "concept_drift_type1.xes",
-        "Concept Drift Type 2": "concept_drift_type2.xes",
-        "BPIChallenge2011": "BPIChallenge2011.xes"
+        "Concept Drift": "input_logs/concept_drift.xes",
+        "Concept Drift Type 1": "input_logs/concept_drift_type1.xes",
+        "Concept Drift Type 2": "input_logs/concept_drift_type2.xes",
+        "BPIChallenge2011": "input_logs/BPIChallenge2011.xes"
     }
 
     results = {}
