@@ -2,27 +2,27 @@ Results for Concept Drift:
   log_name: Concept Drift
   Unique activities: 19
   Variants: 85
-  Edit Distance Variability: 16.61237015449665
+  Edit Distance Variability: 5.646926978546913
   Custom Variability (Entropy): 3.963351863446103
 
 Results for Concept Drift Type 1:
   log_name: Concept Drift Type 1
   Unique activities: 19
   Variants: 45
-  Edit Distance Variability: 17.19618201452001
+  Edit Distance Variability: 5.757211821208054
   Custom Variability (Entropy): 3.957950086018128
 
 Results for Concept Drift Type 2:
   log_name: Concept Drift Type 2
   Unique activities: 18
   Variants: 40
-  Edit Distance Variability: 16.561111056039945
+  Edit Distance Variability: 5.526963196569602
   Custom Variability (Entropy): 3.8662000528550595
 
 Results for BPIChallenge2011:
   log_name: BPIChallenge2011
   Unique activities: 624
   Variants: 981
-  Edit Distance Variability: 670.0594417082218
+  Edit Distance Variability: 196.56277328109263
   Custom Variability (Entropy): 5.917720750628085
 
