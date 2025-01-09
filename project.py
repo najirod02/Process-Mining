@@ -22,12 +22,13 @@ computation
 '''
 @lru_cache(maxsize=None)
 def levenshtein_word_level_cached(trace1, trace2):
+    #prepare the string by removing the first and last char which 
+    # are '(' ')' and create a list of words from the traces
     trace1 = trace1[1:-1]
     trace2 = trace2[1:-1]
-
     words1 = trace1.split(",")
     words2 = trace2.split(",")
-    #print(f"{words1} {words2}")
+
     return Levenshtein.distance(words1, words2)
 
 
@@ -39,8 +40,6 @@ frequencies of each trace
 def compute_edit_distance(variant_pair, frequencies):
     var1, var2 = variant_pair
     distance = levenshtein_word_level_cached(str(var1), str(var2))
-    #print(f"{var1} {var2}")
-    #print(distance)
     #consider frequencies of variants
     weight = frequencies[var1] * frequencies[var2]
     return distance * weight, weight
@@ -140,13 +139,7 @@ def compute_my_variability(event_log):
     return -sum((count / total) * math.log2(count / total) for count in activity_counter.values())
 # ----------- requested functions for the project ----------- 
 
-'''
-FIXME:
-aggiornare risultati sul report
-aggioranre report con nuove osservazioni
-check commenti 
-check print lasciati in giro
-'''
+
 def main():
     #the logs to analyze (name, path)
     logs = {
@@ -154,7 +147,6 @@ def main():
         "Concept Drift Type 1": "input_logs/concept_drift_type1.xes",
         "Concept Drift Type 2": "input_logs/concept_drift_type2.xes",
         "BPIChallenge2011": "input_logs/BPIChallenge2011.xes",
-        #"log_5": "input_logs/log_edit_distance_5.xes"
     }
 
     results = {}
